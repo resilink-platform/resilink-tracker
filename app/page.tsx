@@ -17,7 +17,6 @@ import { STATE_COLORS } from "@/config/colors";
 import TabBar from "@/components/TabBar";
 import MainCard from "@/components/MainCard";
 import MiniStateCards from "@/components/MiniStateCards";
-import Slogan from "@/components/Slogan";
 
 export default function Home() {
   const [rows, setRows] = useState<EnrollmentRow[]>([]);
@@ -119,8 +118,8 @@ export default function Home() {
 
   return (
     // ── Page wrapper — centered, max width 560px, white card on gray bg ──
-    <main className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="w-screen bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <main className="min-h-screen bg-gray-50 px-3 py-4 sm:px-4 sm:py-6 lg:py-10">
+      <div className="w-full max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 overflow-hidden">
         {/* ── Page header: title + live sync indicator ── */}
         <div className="flex items-center justify-between mb-6">
           <div className="">

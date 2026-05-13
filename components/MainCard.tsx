@@ -29,7 +29,7 @@ function ProgressBar({
   onPlus: () => void;
 }) {
   const pct = Math.min(100, 
-              Number(target ?? 0) > 0 ? Math.round((Number(enrolled??0) / Number(target)) * 100) : 0);
+              Number(target ?? 0) > 0 ? Math.round((Number(enrolled??0) / Number(target ?? 0)) * 100) : 0);
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -111,7 +111,7 @@ export default function MainCard({ row, color, onUpdate }: Props) {
               Head of Residents · {row.state}
             </p>
           </div>
-          <Slogan />
+          <Slogan color={color} />
           {isComplete && (
             <span
               className="text-[10px] font-medium px-3 py-1 rounded-md text-white"

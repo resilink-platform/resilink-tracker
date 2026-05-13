@@ -9,8 +9,12 @@
 
 import { useEffect, useState } from "react";
 import { SLOGANS } from "@/config/slogans";
+import { StateColor } from "@/config/colors";
+interface Props {
+  color: StateColor;
+}
 
-export default function Slogan() {
+export default function Slogan({ color }: Props) {
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
 
@@ -30,8 +34,8 @@ export default function Slogan() {
   return (
     <div className="border-t border-gray-100 pt-5 pb-2">
       <p
-        className="text-xl italic text-black text-center leading-relaxed transition-opacity duration-1000"
-        style={{ opacity: visible ? 1 : 0 }}
+        className="text-2xl italic text-center leading-relaxed transition-opacity duration-4000 font-medium"
+        style={{ opacity: visible ? 1 : 0, color: color.dark }}
       >
         &ldquo;{SLOGANS[idx]}&rdquo;
       </p>
