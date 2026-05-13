@@ -25,7 +25,7 @@ export default function MiniStateCards({ rows, activeIdx, onSwitch }: Props) {
     .map((row, i) => ({
       ...row,
       idx: i,
-      pct: Math.min(100, Math.round((row.enrolled / row.target) * 100)),
+      pct: Math.min(100, Math.round((row.mdms_enrolled+row.non_clinical_enrolled + row.dnb_enrolled) / (row.mdms_target + row.non_clinical_target + row.dnb_target) * 100)),
     }))
     .sort((a, b) => b.pct - a.pct);
 
@@ -44,9 +44,9 @@ export default function MiniStateCards({ rows, activeIdx, onSwitch }: Props) {
       <div className="grid grid-cols-6 gap-2">
         {rows.map((row, i) => {
           const c = STATE_COLORS[i] ?? STATE_COLORS[0];
-          const totalEnrolled = row.dnb_enrolled + row.mdms_enrolled;
-const totalTarget = row.dnb_target + row.mdms_target;
-const pct = Math.min(100, Math.round((totalEnrolled / totalTarget) * 100));
+          const totalEnrolled = row.dnb_enrolled + row.mdms_enrolled + row.non_clinical_enrolled;
+          const totalTarget = row.dnb_target + row.mdms_target + row.non_clinical_target;
+          const pct = Math.min(100, Math.round((totalEnrolled / totalTarget) * 100));
           const isActive = i === activeIdx;
           const rank = rankMap[i];
 

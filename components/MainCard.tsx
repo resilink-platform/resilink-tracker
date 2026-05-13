@@ -9,11 +9,12 @@
 import CircularRing from "@/components/CircularRing";
 import { EnrollmentRow } from "@/lib/types";
 import { StateColor } from "@/config/colors";
+import Slogan from "./Slogan";
 
 interface Props {
   row: EnrollmentRow;
   color: StateColor;
-  onUpdate: (field: "dnb_enrolled" | "mdms_enrolled", delta: number) => void;
+  onUpdate: (field: "dnb_enrolled" | "mdms_enrolled" | "non_clinical_enrolled", delta: number) => void;
 }
 
 // ── Individual progress bar with +/- controls ──
@@ -27,14 +28,15 @@ function ProgressBar({
   onMinus: () => void;
   onPlus: () => void;
 }) {
-  const pct = Math.min(100, Math.round((enrolled / target) * 100));
+  const pct = Math.min(100, 
+              Number(target ?? 0) > 0 ? Math.round((Number(enrolled??0) / Number(target)) * 100) : 0);
 
   return (
     <div className="flex flex-col gap-1.5">
 
       {/* Label + count */}
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-800">{label}</span>
+        <span className="text-sm font-medium text-gray-800">{label} </span>
         <span className="text-xs text-gray-500">{enrolled} / {target}</span>
       </div>
 
@@ -71,7 +73,7 @@ function ProgressBar({
           className="w-7 h-7 rounded-full text-white text-sm flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80"
           style={{ background: color.stroke }}
         >
-          +
+          + 
         </button>
       </div>
     </div>
@@ -81,8 +83,8 @@ function ProgressBar({
 export default function MainCard({ row, color, onUpdate }: Props) {
 
   // Overall = DNB + MDMS combined
-  const totalEnrolled = row.dnb_enrolled + row.mdms_enrolled;
-  const totalTarget = row.dnb_target + row.mdms_target;
+  const totalEnrolled = row.dnb_enrolled + row.mdms_enrolled + row.non_clinical_enrolled;
+  const totalTarget = row.dnb_target + row.mdms_target + row.non_clinical_target;
   const overallPct = Math.min(100, Math.round((totalEnrolled / totalTarget) * 100));
   const isComplete = totalEnrolled >= totalTarget;
 
@@ -109,6 +111,7 @@ export default function MainCard({ row, color, onUpdate }: Props) {
               Head of Residents · {row.state}
             </p>
           </div>
+          <Slogan />
           {isComplete && (
             <span
               className="text-[10px] font-medium px-3 py-1 rounded-md text-white"
@@ -140,10 +143,11 @@ export default function MainCard({ row, color, onUpdate }: Props) {
         {/* Divider */}
         <div className="w-px h-24 bg-gray-100 flex-shrink-0" />
 
-        {/* RIGHT — DNB + MD/MS progress bars */}
+        {/* RIGHT — DNB + MD/MS + Non Clinical progress bars */}
         <div className="flex-1 flex flex-col gap-5">
 
           {/* DNB progress bar */}
+          {Number(row.dnb_target ?? 0) > 0 && (
           <ProgressBar
             label="DNB"
             enrolled={row.dnb_enrolled}
@@ -152,8 +156,10 @@ export default function MainCard({ row, color, onUpdate }: Props) {
             onMinus={() => onUpdate("dnb_enrolled", -1)}
             onPlus={() => onUpdate("dnb_enrolled", 1)}
           />
+          )}
 
           {/* MD/MS progress bar */}
+          {Number(row.mdms_target ?? 0) > 0 && (
           <ProgressBar
             label="MD / MS"
             enrolled={row.mdms_enrolled}
@@ -162,6 +168,19 @@ export default function MainCard({ row, color, onUpdate }: Props) {
             onMinus={() => onUpdate("mdms_enrolled", -1)}
             onPlus={() => onUpdate("mdms_enrolled", 1)}
           />
+          )}
+
+          {/* Non Clinical progress bar */}
+          {Number(row.non_clinical_target ?? 0) > 0 && (
+          <ProgressBar
+            label="Non Clinical"
+            enrolled={row.non_clinical_enrolled}
+            target={row.non_clinical_target}
+            color={color}
+            onMinus={() => onUpdate("non_clinical_enrolled", -1)}
+            onPlus={() => onUpdate("non_clinical_enrolled", 1)}
+          />
+          )}
         </div>
       </div>
     </div>

@@ -23,7 +23,9 @@ export default function Home() {
   const [rows, setRows] = useState<EnrollmentRow[]>([]);
   const [activeIdx, setActiveIdx] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [syncStatus, setSyncStatus] = useState<"live" | "saving" | "error">("live");
+  const [syncStatus, setSyncStatus] = useState<"live" | "saving" | "error">(
+    "live",
+  );
 
   // ── Step 1: Load data from Supabase on page mount ──
   useEffect(() => {
@@ -34,7 +36,7 @@ export default function Home() {
         .order("id"); // order matches color assignment in config/colors.ts
 
       if (error) {
-        console.error("Failed to load enrollment data:", error.message);  
+        console.error("Failed to load enrollment data:", error.message);
         setSyncStatus("error");
       } else if (data) {
         setRows(data);
@@ -56,10 +58,12 @@ export default function Home() {
           const updated = payload.new as EnrollmentRow;
           setRows((prev) =>
             prev.map((row) =>
-              row.id === updated.id ? { ...row, enrolled: updated.enrolled } : row
-            )
+              row.id === updated.id
+                ? { ...row, enrolled: updated.enrolled }
+                : row,
+            ),
           );
-        }
+        },
       )
       .subscribe();
 
@@ -71,30 +75,35 @@ export default function Home() {
 
   // ── Step 3: Handle +/- button clicks ──
   async function handleUpdate(
-  field: "dnb_enrolled" | "mdms_enrolled",
-  delta: number
-) {
-  const row = rows[activeIdx];
-  if (!row) return;
+    field: "dnb_enrolled" | "mdms_enrolled" | "non_clinical_enrolled",
+    delta: number,
+  ) {
+    const row = rows[activeIdx];
+    if (!row) return;
 
-  const currentVal = row[field];
-  const maxVal = field === "dnb_enrolled" ? row.dnb_target : row.mdms_target;
-  const newVal = Math.max(0, Math.min(maxVal, currentVal + delta));
+    const currentVal = row[field];
+    const maxVal =
+      field === "dnb_enrolled"
+        ? row.dnb_target
+        : field === "mdms_enrolled"
+          ? row.mdms_target
+          : row.non_clinical_target;
+    const newVal = Math.max(0, Math.min(maxVal, currentVal + delta));
 
-  // Optimistic update — UI updates instantly
-  setRows((prev) =>
-    prev.map((r, i) => (i === activeIdx ? { ...r, [field]: newVal } : r))
-  );
+    // Optimistic update — UI updates instantly
+    setRows((prev) =>
+      prev.map((r, i) => (i === activeIdx ? { ...r, [field]: newVal } : r)),
+    );
 
-  setSyncStatus("saving");
+    setSyncStatus("saving");
 
-  const { error } = await supabase
-    .from("enrollment")
-    .update({ [field]: newVal, updated_at: new Date().toISOString() })
-    .eq("id", row.id);
+    const { error } = await supabase
+      .from("enrollment")
+      .update({ [field]: newVal, updated_at: new Date().toISOString() })
+      .eq("id", row.id);
 
-  setSyncStatus(error ? "error" : "live");
-}
+    setSyncStatus(error ? "error" : "live");
+  }
 
   // ── Loading state ──
   if (loading) {
@@ -111,13 +120,16 @@ export default function Home() {
   return (
     // ── Page wrapper — centered, max width 560px, white card on gray bg ──
     <main className="min-h-screen bg-gray-50 py-10 px-4">
-      <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-
+      <div className="w-screen bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         {/* ── Page header: title + live sync indicator ── */}
         <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-[17px] font-medium text-gray-900">Resilink</h1>
-            <p className="text-[11px] text-gray-400 mt-0.5">
+          <div className="">
+            <img
+              src="/resilink-horizontal-lockup.svg"
+              alt="Resilink"
+              className="h-9 w-auto"
+            />
+            <p className="text-[11px] text-gray-400 mt-1">
               NEET PG — State Enrollment Tracker
             </p>
           </div>
@@ -128,23 +140,24 @@ export default function Home() {
               className="w-2 h-2 rounded-full"
               style={{
                 background:
-                  syncStatus === "live" ? activeColor.stroke :
-                  syncStatus === "saving" ? "#F59E0B" : "#EF4444",
+                  syncStatus === "live"
+                    ? activeColor.stroke
+                    : syncStatus === "saving"
+                      ? "#F59E0B"
+                      : "#EF4444",
               }}
             />
             <span className="text-[11px] text-gray-400">
-              {syncStatus === "live" ? "live" :
-               syncStatus === "saving" ? "saving..." : "error"}
+              {syncStatus === "live"
+                ? "live"
+                : syncStatus === "saving"
+                  ? "saving..."
+                  : "error"}
             </span>
           </div>
         </div>
-
         {/* ── Tab bar: 6 colored state pill buttons ── */}
-        <TabBar
-          rows={rows}
-          activeIdx={activeIdx}
-          onSwitch={setActiveIdx}
-        />
+        <TabBar rows={rows} activeIdx={activeIdx} onSwitch={setActiveIdx} />
 
         {/* ── Main card: selected state with large ring + +/- controls ── */}
         {activeRow && (
@@ -163,7 +176,6 @@ export default function Home() {
         />
 
         {/* ── Rotating motivational slogan ── */}
-        <Slogan />
       </div>
     </main>
   );

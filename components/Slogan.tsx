@@ -30,7 +30,7 @@ export default function Slogan() {
   return (
     <div className="border-t border-gray-100 pt-5 pb-2">
       <p
-        className="text-[13px] italic text-gray-400 text-center leading-relaxed transition-opacity duration-400"
+        className="text-xl italic text-black text-center leading-relaxed transition-opacity duration-1000"
         style={{ opacity: visible ? 1 : 0 }}
       >
         &ldquo;{SLOGANS[idx]}&rdquo;
