@@ -111,7 +111,7 @@ export default function MainCard({ row, color, onUpdate }: Props) {
               Head of Residents · {row.state}
             </p>
           </div>
-          <Slogan color={color} />
+          
           {isComplete && (
             <span
               className="text-[10px] font-medium px-3 py-1 rounded-md text-white"
@@ -121,10 +121,11 @@ export default function MainCard({ row, color, onUpdate }: Props) {
             </span>
           )}
         </div>
+        <Slogan color={color} />
       </div>
 
       {/* ── Body: Ring LEFT + Progress bars RIGHT ── */}
-      <div className="bg-white px-6 py-6 flex items-center gap-6">
+      <div className="bg-white px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center gap-5 sm:gap-6">
 
         {/* LEFT — Overall circular ring */}
         <div className="flex flex-col items-center gap-1 flex-shrink-0">
@@ -141,7 +142,7 @@ export default function MainCard({ row, color, onUpdate }: Props) {
         </div>
 
         {/* Divider */}
-        <div className="w-px h-24 bg-gray-100 flex-shrink-0" />
+        <div className="hidden sm:block w-px h-24 bg-gray-100 flex-shrink-0" />
 
         {/* RIGHT — DNB + MD/MS + Non Clinical progress bars */}
         <div className="flex-1 flex flex-col gap-5">

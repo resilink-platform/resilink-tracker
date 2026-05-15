@@ -18,7 +18,7 @@ interface Props {
 
 export default function TabBar({ rows, activeIdx, onSwitch }: Props) {
   return (
-    <div className="flex flex-wrap gap-2 mb-5">
+    <div className="flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-none -mx-3 px-3 sm:flex-wrap sm:overflow-visible">
       {rows.map((row, i) => {
         const c = STATE_COLORS[i] ?? STATE_COLORS[0];
         const totalEnrolled = row.dnb_enrolled + row.mdms_enrolled;

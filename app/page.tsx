@@ -118,8 +118,8 @@ export default function Home() {
 
   return (
     // ── Page wrapper — centered, max width 560px, white card on gray bg ──
-    <main className="min-h-screen bg-gray-50 px-3 py-4 sm:px-4 sm:py-6 lg:py-10">
-      <div className="w-full max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 overflow-hidden">
+    <main className="min-h-screen bg-gray-50 px-0 py-0 sm:px-4 sm:py-6 lg:py-10">
+  <div className="w-full max-w-7xl mx-auto bg-white sm:rounded-2xl shadow-sm border-0 sm:border border-gray-100 p-3 sm:p-6 overflow-hidden min-h-screen sm:min-h-0">
         {/* ── Page header: title + live sync indicator ── */}
         <div className="flex items-center justify-between mb-6">
           <div className="">

@@ -34,7 +34,7 @@ export default function Slogan({ color }: Props) {
   return (
     <div className="border-t border-gray-100 pt-5 pb-2">
       <p
-        className="text-2xl italic text-center leading-relaxed transition-opacity duration-4000 font-medium"
+        className="text-base sm:text-2xl italic text-center leading-relaxed transition-opacity duration-4000 font-medium"
         style={{ opacity: visible ? 1 : 0, color: color.dark }}
       >
         &ldquo;{SLOGANS[idx]}&rdquo;

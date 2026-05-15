@@ -10,3 +10,5 @@ body {
   font-family: system-ui, -apple-system, sans-serif;
   background: #F9FAFB;
 }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
