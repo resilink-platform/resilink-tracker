@@ -145,14 +145,35 @@ export default function MainCard({ row, color, onUpdate }: Props) {
         className="px-6 py-5 border-b border-gray-100"
         style={{ background: color.bg }}
       >
-        <div className="flex items-center gap-3">
+        {/*
+          ── CHANGE 1 ──
+          WHAT: Added "flex-wrap" and "gap-y-2" to this div
+          WHY:  On mobile, avatar + name + deadline badge don't fit in one row.
+                flex-wrap allows the deadline badge to drop to a new line.
+                gap-y-2 adds vertical spacing between the two lines when it wraps.
+                gap-3 renamed to gap-x-3 so horizontal gap still works correctly.
+          DESKTOP: No visual change — everything still fits in one row.
+          MOBILE:  Avatar + name on line 1, deadline badge on line 2.
+        */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <div
             className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-medium text-white flex-shrink-0"
             style={{ background: color.stroke }}
           >
             {row.abbr}
           </div>
-          <div className="flex-1">
+          {/*
+            ── CHANGE 2 ──
+            WHAT: Added "min-w-0" to this div
+            WHY:  Without min-w-0, flex children with "flex-1" can overflow
+                  their container on mobile when the head name is long.
+                  min-w-0 tells the browser this div is allowed to shrink
+                  below its content size, preventing overflow.
+            DESKTOP: No visual change.
+            MOBILE:  Long head names (e.g. "Dr. Nawaz & Dr. Siraz") don't
+                     overflow outside the card boundary.
+          */}
+          <div className="flex-1 min-w-0">
             <p
               className="text-[15px] font-medium"
               style={{ color: color.dark }}
@@ -164,80 +185,84 @@ export default function MainCard({ row, color, onUpdate }: Props) {
             </p>
           </div>
           {/* ── Deadline badge (replaces 'hiren') ── */}
-          {isComplete ? (
-            <span
-              className="text-lg font-medium px-3 py-1 rounded-md"
-              style={{ 
-                background: deadLineInfro?.isOverdue
-                        ? "#FEE2E2"
-                        : deadLineInfro?.isUrgent
-                          ? "#FFEDD5"
-                          : deadLineInfro?.isWarning
-                            ? "#FEF9C3"
-                            : "#F3F4F6",
-                      color: deadLineInfro?.isOverdue
-                        ? "#DC2626"
-                        : deadLineInfro?.isUrgent
-                          ? "#C2410C"
-                          : deadLineInfro?.isWarning
-                            ? "#CA8A04"
-                            : "#6B7280",
-               }}
-            >
-              {deadLineInfro ? deadLineInfro.reachedMsg : "Target reached"}
-            </span>
-          ): deadLineInfro ?(
-                <div className="flex items-center gap-1.5">
-                  {/* Calendar icon + date */}
-                  <span
-                    className="text-lg flex items-center gap-1 font-bold"
-                    style={{ color: deadLineInfro.isOverdue ? "#DC2626" : "#6B7280" }}
+          <div className="w-full sm:w-auto flex sm:justify-end">
+            {isComplete ? (
+              <span
+                className="text-[15px] font-medium px-3 py-1 rounded-md"
+                style={{
+                  background: deadLineInfro?.isOverdue
+                    ? "#FEE2E2"
+                    : deadLineInfro?.isUrgent
+                      ? "#FFEDD5"
+                      : deadLineInfro?.isWarning
+                        ? "#FEF9C3"
+                        : "#F3F4F6",
+                  color: deadLineInfro?.isOverdue
+                    ? "#DC2626"
+                    : deadLineInfro?.isUrgent
+                      ? "#C2410C"
+                      : deadLineInfro?.isWarning
+                        ? "#CA8A04"
+                        : "#6B7280",
+                }}
+              >
+                {deadLineInfro ? deadLineInfro.reachedMsg : "Target reached"}
+              </span>
+            ) : deadLineInfro ? (
+              <div className="flex items-center gap-1.5">
+                {/* Calendar icon + date */}
+                <span
+                  className="text-lg flex items-center gap-1 font-bold"
+                  style={{
+                    color: deadLineInfro.isOverdue ? "#DC2626" : "#6B7280",
+                  }}
+                >
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
                   >
-                    <svg
-                      width="11"
-                      height="11"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    >
-                      <rect x="3" y="4" width="18" height="18" rx="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
-                    {deadLineInfro.formatted}
-                  </span>
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  {deadLineInfro.formatted}
+                </span>
 
-                  {/* Days remaining pill */}
-                  <span
-                    className="text-[15px] font-medium px-2 py-0.5 rounded-md"
-                    style={{
-                      background: deadLineInfro.isOverdue
-                        ? "#FEE2E2"
-                        : deadLineInfro.isUrgent
-                          ? "#FFEDD5"
-                          : deadLineInfro.isWarning
-                            ? "#FEF9C3"
-                            : "#F3F4F6",
-                      color: deadLineInfro.isOverdue
-                        ? "#DC2626"
-                        : deadLineInfro.isUrgent
-                          ? "#C2410C"
-                          : deadLineInfro.isWarning
-                            ? "#CA8A04"
-                            : "#6B7280",
-                    }}
-                  >
-                    {deadLineInfro.isOverdue
-                      ? `${Math.abs(deadLineInfro.daysLeft)}d overdue`
-                      : deadLineInfro.daysLeft === 0
-                        ? "Due today"
-                        : `${deadLineInfro.daysLeft}d left`}
-                  </span>
-                </div>
-          ): null}
+                {/* Days remaining pill */}
+                <span
+                  className="text-[11px] font-medium px-2 py-0.5 rounded-md"
+                  style={{
+                    background: deadLineInfro.isOverdue
+                      ? "#FEE2E2"
+                      : deadLineInfro.isUrgent
+                        ? "#FFEDD5"
+                        : deadLineInfro.isWarning
+                          ? "#FEF9C3"
+                          : "#F3F4F6",
+                    color: deadLineInfro.isOverdue
+                      ? "#DC2626"
+                      : deadLineInfro.isUrgent
+                        ? "#C2410C"
+                        : deadLineInfro.isWarning
+                          ? "#CA8A04"
+                          : "#6B7280",
+                  }}
+                >
+                  {deadLineInfro.isOverdue
+                    ? `${Math.abs(deadLineInfro.daysLeft)}d overdue`
+                    : deadLineInfro.daysLeft === 0
+                      ? "Due today"
+                      : `${deadLineInfro.daysLeft}d left`}
+                </span>
+              </div>
+            ) : null}
+          </div>
         </div>
         <Slogan color={color} />
       </div>
