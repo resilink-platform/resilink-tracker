@@ -104,6 +104,40 @@ export default function MainCard({ row, color, onUpdate }: Props) {
   );
   const isComplete = totalEnrolled >= totalTarget;
 
+  const deadLineInfro = row.deadline
+    ? (() => {
+        const today = new Date();
+        const due = new Date(row.deadline);
+        const daysLeft = Math.ceil(
+          (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+        );
+        const isOverdue = daysLeft < 0;
+        const isUrgent = daysLeft >= 0 && daysLeft <= 7;
+        const isWarning = daysLeft > 7 && daysLeft <= 14;
+
+        // Format date nicely: "Jun 30, 2026"
+        const formatted = due.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        });
+        const reachedMsg = isOverdue
+          ? `Target reached ${Math.abs(daysLeft)}d after deadline`
+          : daysLeft === 0
+            ? "Target reached exactly on deadline"
+            : `Target reached ${daysLeft}d before deadline`;
+
+        return {
+          daysLeft,
+          isOverdue,
+          isUrgent,
+          isWarning,
+          formatted,
+          reachedMsg,
+        };
+      })()
+    : null;
+
   return (
     <div className="rounded-2xl overflow-hidden border border-gray-100 mb-4">
       {/* ── Colored header ── */}
@@ -130,30 +164,34 @@ export default function MainCard({ row, color, onUpdate }: Props) {
             </p>
           </div>
           {/* ── Deadline badge (replaces 'hiren') ── */}
-          {row.deadline &&
-            (() => {
-              const today = new Date();
-              const due = new Date(row.deadline);
-              const daysLeft = Math.ceil(
-                (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
-              );
-              const isOverdue = daysLeft < 0;
-              const isUrgent = daysLeft >= 0 && daysLeft <= 7;
-              const isWarning = daysLeft > 7 && daysLeft <= 14;
-
-              // Format date nicely: "Jun 30, 2026"
-              const formatted = due.toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              });
-
-              return (
+          {isComplete ? (
+            <span
+              className="text-lg font-medium px-3 py-1 rounded-md"
+              style={{ 
+                background: deadLineInfro?.isOverdue
+                        ? "#FEE2E2"
+                        : deadLineInfro?.isUrgent
+                          ? "#FFEDD5"
+                          : deadLineInfro?.isWarning
+                            ? "#FEF9C3"
+                            : "#F3F4F6",
+                      color: deadLineInfro?.isOverdue
+                        ? "#DC2626"
+                        : deadLineInfro?.isUrgent
+                          ? "#C2410C"
+                          : deadLineInfro?.isWarning
+                            ? "#CA8A04"
+                            : "#6B7280",
+               }}
+            >
+              {deadLineInfro ? deadLineInfro.reachedMsg : "Target reached"}
+            </span>
+          ): deadLineInfro ?(
                 <div className="flex items-center gap-1.5">
                   {/* Calendar icon + date */}
                   <span
                     className="text-lg flex items-center gap-1 font-bold"
-                    style={{ color: isOverdue ? "#DC2626" : "#6B7280" }}
+                    style={{ color: deadLineInfro.isOverdue ? "#DC2626" : "#6B7280" }}
                   >
                     <svg
                       width="11"
@@ -169,46 +207,37 @@ export default function MainCard({ row, color, onUpdate }: Props) {
                       <line x1="8" y1="2" x2="8" y2="6" />
                       <line x1="3" y1="10" x2="21" y2="10" />
                     </svg>
-                    {formatted}
+                    {deadLineInfro.formatted}
                   </span>
 
                   {/* Days remaining pill */}
                   <span
                     className="text-[15px] font-medium px-2 py-0.5 rounded-md"
                     style={{
-                      background: isOverdue
+                      background: deadLineInfro.isOverdue
                         ? "#FEE2E2"
-                        : isUrgent
+                        : deadLineInfro.isUrgent
                           ? "#FFEDD5"
-                          : isWarning
+                          : deadLineInfro.isWarning
                             ? "#FEF9C3"
                             : "#F3F4F6",
-                      color: isOverdue
+                      color: deadLineInfro.isOverdue
                         ? "#DC2626"
-                        : isUrgent
+                        : deadLineInfro.isUrgent
                           ? "#C2410C"
-                          : isWarning
+                          : deadLineInfro.isWarning
                             ? "#CA8A04"
                             : "#6B7280",
                     }}
                   >
-                    {isOverdue
-                      ? `${Math.abs(daysLeft)}d overdue`
-                      : daysLeft === 0
+                    {deadLineInfro.isOverdue
+                      ? `${Math.abs(deadLineInfro.daysLeft)}d overdue`
+                      : deadLineInfro.daysLeft === 0
                         ? "Due today"
-                        : `${daysLeft}d left`}
+                        : `${deadLineInfro.daysLeft}d left`}
                   </span>
                 </div>
-              );
-            })()}
-          {isComplete && (
-            <span
-              className="text-[10px] font-medium px-3 py-1 rounded-md text-white"
-              style={{ background: color.stroke }}
-            >
-              Target reached
-            </span>
-          )}
+          ): null}
         </div>
         <Slogan color={color} />
       </div>
