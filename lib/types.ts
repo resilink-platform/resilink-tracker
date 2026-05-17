@@ -12,4 +12,5 @@ export interface EnrollmentRow {
   non_clinical_enrolled: number;
   non_clinical_target: number;
   updated_at: string;
+  deadline: string | null;
 }

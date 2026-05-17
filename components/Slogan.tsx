@@ -32,10 +32,17 @@ export default function Slogan({ color }: Props) {
   }, []);
 
   return (
-    <div className="border-t border-gray-100 pt-5 pb-2">
+    <div className= "pt-3 pb-1 sm:pt-5 sm:pb-2">
+      
       <p
-        className="text-base sm:text-2xl italic text-center leading-relaxed transition-opacity duration-4000 font-medium"
-        style={{ opacity: visible ? 1 : 0, color: color.dark }}
+        className="text-base sm:text-2xl italic text-center leading-relaxed transition-opacity duration-4000 "
+         style={{ 
+    opacity: visible ? 1 : 0, 
+    color: color.dark,
+    fontFamily: "var(--font-playfair)",
+    fontStyle: "italic",
+    fontWeight: 500,
+  }}
       >
         &ldquo;{SLOGANS[idx]}&rdquo;
       </p>

@@ -4,11 +4,14 @@
 // ─────────────────────────────────────────────────────────
 
 export const SLOGANS: string[] = [
-  "Every resident you enroll is a future leader in medicine.",
-  "Build the tribe — the residents you mentor today shape tomorrow.",
-  "Your state's medical future starts with who you bring in today.",
-  "Leadership is measured not by your rank, but by those you lift.",
-  "One more enrollment. One more life changed forever.",
-  "The strongest networks are built one resident at a time.",
-  "Champions don't wait for the right moment — they create it.",
+  "A life becomes immortal when it changes lives beyond its own.",
+  "A true legacy is when strangers benefit from your vision.",
+  "Legacy is built when comfort is sacrificed for purpose.",
+  "Your name survives only through the people you uplift.",
+  "Legacy begins the moment your mission becomes bigger than yourself.",
+  "Build something that will make people thank you years later.",
+  "Legacy is protected by courage, not convenience.",
+  "If we execute well today, thousands of aspirants benefit tomorrow.",
+  "Serve a purpose bigger than yourself.",
+  "Real impact is born from hard work done without applause."
 ];
